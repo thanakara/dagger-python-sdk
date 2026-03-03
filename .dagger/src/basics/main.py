@@ -20,3 +20,25 @@ class Basics:
             .with_exec(["grep", "-R", pattern, "."])
             .stdout()
         )
+
+    @function
+    def web(self, source: dagger.Directory) -> dagger.Container:
+        """Returns an NGINX Service"""
+        return (
+            dag.container()
+            .from_("nginx")
+            .with_directory("/usr/share/nginx/html", source)
+        )
+
+    @function
+    async def run_script(self, worktree: dagger.Directory) -> str:
+        """Run scripts from ../scripts"""
+        return await (
+            dag.container()
+            .from_("alpine:latest")
+            .with_exec(["apk", "add", "bash"])
+            .with_directory("/worktree", worktree)
+            .with_workdir("/worktree")
+            .with_exec(["scripts/dagger-simple"])
+            .stdout()
+        )
