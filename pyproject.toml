@@ -1,0 +1,19 @@
+[project]
+name = "dagger-python-sdk"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "thanakara", email = "thkaranikolopoulos@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "pandas>=3.0.1",
+]
+
+[project.scripts]
+dagger-python-sdk = "dagger_python_sdk:main"
+
+[build-system]
+requires = ["uv_build>=0.8.14,<0.9.0"]
+build-backend = "uv_build"
