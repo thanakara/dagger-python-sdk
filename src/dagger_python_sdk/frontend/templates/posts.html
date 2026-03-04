@@ -12,7 +12,9 @@
 <h2>• POSTS</h2>
 <hr>
 {% for post in posts %}
-<h3>{{ post.title }}</h3>
+<h3>
+    <a href="{{ url_for('select_post', post_id=post.id) }}">{{ post.title }}</a>
+</h3>
 <p>{{ post.content }}</p>
 {% endfor %}
 {% endblock %}

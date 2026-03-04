@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ super() }}
+{% endblock %}
+
+{% block stylesheets %}
+{{ super() }}
+<style>
+    .btn {
+        display: inline-block;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .btn-edit {
+        background-color: #4a90e2;
+        color: white;
+    }
+
+    .btn-delete {
+        background-color: #e24a4a;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="post-header">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h4>{{ post.author }}</h4>
+        <span>{{ post.date_posted }}</span>
+    </div>
+    <hr>
+    <h3>{{ post.title }}</h3>
+    <p>{{ post.content }}</p>
+
+    <a href="/posts/{{ post.id }}/edit" class="btn btn-edit">Edit Post</a>
+
+    <form action="/posts/{{ post.id }}/delete" method="POST" style="display: inline;">
+        <button type="submit" class="btn btn-delete">Delete Post</button>
+    </form>
+</div>
+{% endblock %}
