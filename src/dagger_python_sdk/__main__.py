@@ -1,8 +1,7 @@
+import json
 import logging
 import sys
 from pathlib import Path
-
-import pandas as pd
 
 logging.basicConfig(
     level=logging.INFO,
@@ -11,16 +10,21 @@ logging.basicConfig(
 )
 
 
-def load_csv(filepath: Path | str) -> None:
-    """Loads CSV file with sample data"""
+def get_posts(filepath: Path | str) -> None:
+    """Gets all posts from JSON file"""
     if filepath.exists():
-        logging.info("Data Found: ")
-        df = pd.read_csv(filepath)
-        logging.info(df.head())
+        with filepath.open("r") as f_:
+            posts = json.load(f_)
+        logging.info(json.dumps(posts, indent=3))
     else:
         logging.error("File Not Found")
 
 
+def main():
+    """_main_execution_pyproject_script"""
+    filepath = Path("src") / "data" / "posts.json"
+    get_posts(filepath)
+
+
 if __name__ == "__main__":
-    filepath = Path("src") / "data" / "sample.csv"
-    load_csv(filepath)
+    main()

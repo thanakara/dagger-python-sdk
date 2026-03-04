@@ -1,0 +1,87 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap");
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #f5f0e8;
+    --ink: #1a1612;
+    --muted: #7a6f62;
+    --accent: #c0392b;
+    --rule: #c8bfb0;
+    --max-width: 680px;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: "Source Serif 4", Georgia, serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    padding: 3rem 1.5rem 6rem;
+}
+
+/* ── Layout ── */
+.container,
+main,
+article,
+section {
+    max-width: var(--max-width);
+    margin-inline: auto;
+}
+
+/* ── Heading: HOME ── */
+h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+}
+
+/* ── Horizontal Rule ── */
+hr {
+    border: none;
+    border-top: 1.5px solid var(--rule);
+    margin-bottom: 2.8rem;
+}
+
+/* ── Post Title ── */
+h3 {
+    font-family: "Playfair Display", serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 0.55rem;
+}
+
+h3::before {
+    content: ";
+ display: block;
+    width: 2rem;
+    height: 2px;
+    background: var(--accent);
+    margin-bottom: 0.7rem;
+    opacity: 0.6;
+}
+
+/* ── Post Content ── */
+p {
+    color: var(--ink);
+    margin-bottom: 2.6rem;
+    max-width: 60ch;
+}
+
+/* ── Post spacing (each iteration) ── */
+h3+p {
+    margin-top: 0;
+}
