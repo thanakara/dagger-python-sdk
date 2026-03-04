@@ -30,5 +30,36 @@ class Basics:
         )
 
     @function
-    def fastapi(self) -> dagger.Container:
-        pass
+    def fastapi_server(self, source: dagger.Directory) -> dagger.Service:
+        """
+        Build and serve the FastAPI application as a Dagger Service.
+
+        ```bash
+        dagger call fastapi-server --source . up --ports 8000:800
+        ```
+        """
+
+        BACKEND_DIR = "src/dagger_python_sdk/backend"
+
+        return (
+            dag.container()
+            .from_("python:3.12-slim")
+            .with_exec(["pip", "install", "uv"])
+            .with_directory("/app", source)
+            .with_workdir("/app")
+            .with_exec(["uv", "sync"])
+            .with_exposed_port(8000)
+            .as_service(
+                args=[
+                    "uv",
+                    "run",
+                    "fastapi",
+                    "run",
+                    "{}/app.py".format(BACKEND_DIR),
+                    "--host",
+                    "0.0.0.0",
+                    "--port",
+                    "8000",
+                ]
+            )
+        )
