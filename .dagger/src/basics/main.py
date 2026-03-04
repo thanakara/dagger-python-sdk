@@ -1,46 +1,59 @@
+from pathlib import Path
+from typing import Annotated
+
 import dagger
-from dagger import dag, function, object_type
+from dagger import DefaultPath, Doc, dag, function, object_type
+
+BACKEND_DIR = Path("src") / "dagger_python_sdk" / "backend"
 
 
 @object_type
 class Basics:
     @function
-    async def run_script(self, worktree: dagger.Directory) -> str:
-        """Run scripts from ../scripts"""
+    def base(self) -> dagger.Container:
+        """Shared Debian base with apt cache and common tools"""
+        apt_cache = dag.cache_volume("apt-cache")
+        return (
+            dag.container()
+            .from_("debian:bookworm-slim")
+            .with_mounted_cache("/var/cache/apt/archives", apt_cache)
+            .with_exec(["apt-get", "update"])
+            .with_exec(["apt-get", "install", "--yes", "git", "jq"])
+        )
+
+    @function
+    async def run_script(
+        self,
+        source: Annotated[
+            dagger.Directory, DefaultPath("/"), Doc("repo root containing scripts")
+        ],
+    ) -> str:
+        """Run scripts/dagger-simple from the worktree"""
         return await (
             dag.container()
-            .from_("alpine:latest")
-            .with_exec(["apk", "add", "bash"])
-            .with_directory("/worktree", worktree)
-            .with_workdir("/worktree")
+            .from_("alpine:3.19")
+            .with_exec(["apk", "add", "bash", "dos2unix"])
+            .with_directory("/source", source)
+            .with_workdir("/source")
+            .with_exec(["dos2unix", "scripts/dagger-simple"])
             .with_exec(["scripts/dagger-simple"])
             .stdout()
         )
 
     @function
-    def env(self) -> dagger.Container:
-        """Checkout CACHE technique (try multiple times)"""
-        apt_cache = dag.cache_volume("apt-cache")
-        return (
-            dag.container()
-            .from_("debian:latest")
-            .with_mounted_cache("/var/cache/apt/archives", apt_cache)
-            .with_exec(["apt-get", "update"])
-            .with_exec(["apt-get", "install", "--yes", "mariadb-server", "jq"])
-        )
-
-    @function
-    def fastapi_server(self, source: dagger.Directory) -> dagger.Service:
+    def fastapi_server(
+        self,
+        source: Annotated[
+            dagger.Directory, DefaultPath("/"), Doc("project source directory")
+        ],
+    ) -> dagger.Service:
         """
         Build and serve the FastAPI application as a Dagger Service.
 
         ```bash
-        dagger call fastapi-server --source . up --ports 8000:800
+        dagger call fastapi-server up --ports 8000:8000
         ```
         """
-
-        BACKEND_DIR = "src/dagger_python_sdk/backend"
-
         return (
             dag.container()
             .from_("python:3.12-slim")
@@ -55,11 +68,11 @@ class Basics:
                     "run",
                     "fastapi",
                     "run",
-                    "{}/app.py".format(BACKEND_DIR),
+                    BACKEND_DIR.joinpath("app.py").as_posix(),
                     "--host",
                     "0.0.0.0",
                     "--port",
                     "8000",
-                ]
+                ],
             )
         )
