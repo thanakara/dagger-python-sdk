@@ -2,6 +2,6 @@
 
 set -e
 
-filepath="./dagger.json"
+filepath="./src/dagger_python_sdk/frontend/templates/base.html"
 
 [ -f $filepath ] && cat $filepath || echo "filepath_not_found"
