@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-{% block title %}
-{{ super() }}
-{% endblock %}
-
 {% block stylesheets %}
 {{ super() }}
 {% endblock %}
@@ -11,8 +7,17 @@
 {% block body %}
 <h2>• HOME</h2>
 <hr>
-{% for post in posts %}
-<h3>{{ post.title }}</h3>
-<p>{{ post.content }}</p>
-{% endfor %}
+<p>This is a humble introduction into dagger.io using
+    FastAPI as a service. The posts are based on the file
+    located @<em>src/data/posts.json</em>
+</p>
+<ul>
+    <b>Jumpto</b>:
+    <li>
+        <a href="/posts">/posts</a>
+    </li>
+    <li>
+        <a href="/api/posts">/api/posts</a>
+    </li>
+</ul>
 {% endblock %}

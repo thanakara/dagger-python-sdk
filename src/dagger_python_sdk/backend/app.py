@@ -26,10 +26,16 @@ app.mount(
 
 
 @app.get("/", include_in_schema=False)
-@app.get("/posts", include_in_schema=False)
 def home(request: Request):
     return templates.TemplateResponse(
-        request=request, name="home.html", context={"posts": posts, "title": "Home"}
+        request=request, name="home.html", context={"title": "Home"}
+    )
+
+
+@app.get("/posts", include_in_schema=False)
+def posts_index(request: Request):
+    return templates.TemplateResponse(
+        request=request, name="posts.html", context={"posts": posts, "title": "Posts"}
     )
 
 

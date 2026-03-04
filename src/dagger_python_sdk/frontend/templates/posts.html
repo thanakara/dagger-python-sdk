@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ super() }}
+{% endblock %}
+
+{% block stylesheets %}
+{{ super() }}
+{% endblock %}
+
+{% block body %}
+<h2>• POSTS</h2>
+<hr>
+{% for post in posts %}
+<h3>{{ post.title }}</h3>
+<p>{{ post.content }}</p>
+{% endfor %}
+{% endblock %}
