@@ -2,50 +2,48 @@ from pathlib import Path
 from typing import Annotated
 
 import dagger
-from dagger import DefaultPath, Doc, dag, function, object_type
+from dagger import DefaultPath, Doc, Ignore, dag, function, object_type
 
 BACKEND_DIR = Path("src") / "dagger_python_sdk" / "backend"
+
+SourceDir = Annotated[
+    dagger.Directory,
+    DefaultPath("/"),
+    Doc("project source directory"),
+    Ignore([".venv", "**/__pycache__", "**/*.pyc", ".git", ".pytest_cache"]),
+]
 
 
 @object_type
 class Basics:
     @function
-    def base(self) -> dagger.Container:
-        """Shared Debian base with apt cache and common tools"""
-        apt_cache = dag.cache_volume("apt-cache")
+    def base(
+        self,
+        source: SourceDir,
+    ) -> dagger.Container:
+        """Shared Python base with uv and dependencies installed"""
+
+        uv_cache = dag.cache_volume("uv-cache")
+        venv_cache = dag.cache_volume("venv-cache")
+
         return (
             dag.container()
-            .from_("debian:bookworm-slim")
-            .with_mounted_cache("/var/cache/apt/archives", apt_cache)
-            .with_exec(["apt-get", "update"])
-            .with_exec(["apt-get", "install", "--yes", "git", "jq"])
-        )
-
-    @function
-    async def run_script(
-        self,
-        source: Annotated[
-            dagger.Directory, DefaultPath("/"), Doc("repo root containing scripts")
-        ],
-    ) -> str:
-        """Run scripts/dagger-simple from the worktree"""
-        return await (
-            dag.container()
-            .from_("alpine:3.19")
-            .with_exec(["apk", "add", "bash", "dos2unix"])
-            .with_directory("/source", source)
-            .with_workdir("/source")
-            .with_exec(["dos2unix", "scripts/dagger-simple"])
-            .with_exec(["scripts/dagger-simple"])
-            .stdout()
+            .from_("python:3.12-slim")
+            .with_exec(["pip", "install", "uv"])
+            .with_directory(
+                path="/app",
+                source=source,
+            )
+            .with_workdir("/app")
+            .with_mounted_cache("/root/.cache/uv", uv_cache)
+            .with_mounted_cache("/app/.venv", venv_cache)
+            .with_exec(["uv", "sync"])
         )
 
     @function
     def fastapi_server(
         self,
-        source: Annotated[
-            dagger.Directory, DefaultPath("/"), Doc("project source directory")
-        ],
+        source: SourceDir,
     ) -> dagger.Service:
         """
         Build and serve the FastAPI application as a Dagger Service.
@@ -55,12 +53,7 @@ class Basics:
         ```
         """
         return (
-            dag.container()
-            .from_("python:3.12-slim")
-            .with_exec(["pip", "install", "uv"])
-            .with_directory("/app", source)
-            .with_workdir("/app")
-            .with_exec(["uv", "sync"])
+            self.base(source=source)
             .with_exposed_port(8000)
             .as_service(
                 args=[
