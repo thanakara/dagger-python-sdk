@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Annotated
 
 import dagger
-from dagger import DefaultPath, Doc, Ignore, dag, function, object_type
+from dagger import DefaultPath, Doc, Ignore, check, dag, function, object_type
 
 BACKEND_DIR = Path("src") / "dagger_python_sdk" / "backend"
 
@@ -69,3 +69,22 @@ class Basics:
                 ],
             )
         )
+
+    @function
+    @check
+    async def validate_fastapi_server(
+        self,
+        source: SourceDir,
+    ) -> None:
+        """
+        Validates that the applications base image builds successfully.
+
+        ```bash
+        dagger check
+        ```
+
+        * Locally: Run `dagger check` before pushing ot catch issues early
+        * CI: Add `dagger check` to your CI pipeline as a quality gate
+        """
+        # on Container use: .sync() & on Service: .start()
+        await self.fastapi_server(source=source).start()
