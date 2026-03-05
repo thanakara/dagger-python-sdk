@@ -1,30 +1,11 @@
-import sys
-import logging
+import asyncio
 
-from pathlib import Path
-
-from omegaconf import OmegaConf
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="[%(levelname)s]:\n%(message)s",
-    handlers=[logging.StreamHandler(stream=sys.stdout)],
-)
-
-
-def get_posts(filepath: Path | str) -> None:
-    """Gets all posts from JSON file"""
-    if filepath.exists():
-        posts = OmegaConf.load(filepath)
-        logging.info(OmegaConf.to_yaml(posts))
-    else:
-        logging.error("File Not Found")
+from dagger_python_sdk.utils import DatabaseSeeder
 
 
 def main():
-    """_main_execution_pyproject_script"""
-    filepath = Path("src") / "data" / "posts.json"
-    get_posts(filepath)
+    seeder = DatabaseSeeder()
+    asyncio.run(seeder.seed())
 
 
 if __name__ == "__main__":

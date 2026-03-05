@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -e
+
+DBPATH="./src/data/dag.db"
+app="src/dagger_python_sdk/backend/app.py"
+
+logitin() {
+    echo "[info]: exit 2"
+    exit 2
+}
+
+trap logitin EXIT
+
+if [ ! -f "$DBPATH" ]; then
+    uv run fastapi dev "$app" &
+    run-seeder
+    exit 1
+else
+    echo "[err]: %.db found" >&2 && exit 1
+fi

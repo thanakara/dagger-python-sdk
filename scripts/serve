@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e
+
+DBPATH="./src/data/dag.db"
+app="src/dagger_python_sdk/backend/app.py"
+
+if [ -f "$DBPATH" ]; then
+    uv run fastapi dev "$app" &
+    FASTAPI_PID=$!
+    sleep 1
+    echo "[debug]: FastAPI PID: $FASTAPI_PID " >&2
+    jobs
+else
+    exit 1
+fi

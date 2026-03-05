@@ -5,19 +5,19 @@
 {% endblock %}
 
 {% block body %}
-<h2>• HOME</h2>
+<h1>HOME</h1>
 <hr>
 <p>This is a humble introduction into dagger.io using
     FastAPI as a service. The posts are based on the file
     located @<em>src/data/posts.json</em>
 </p>
+<h2><b>Jump-to:</b></h2>
 <ul>
-    <b>Jumpto</b>:
     <li>
-        <a href="/posts">/posts</a>
+        <a href="{{ url_for('posts') }}">/posts</a>
     </li>
     <li>
-        <a href="/api/posts">/api/posts</a>
+        <a href="{{ url_for('get_posts') }}">/api/posts</a>
     </li>
 </ul>
 {% endblock %}

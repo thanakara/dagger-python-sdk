@@ -30,13 +30,19 @@
     .btn:hover {
         opacity: 0.85;
     }
+
+    .post-header-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="post-header">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h4>{{ post.author.username }}</h4>
+    <div>
+        <h3>{{ post.author.username }}</h3>
         <span>{{ post.date_posted.strftime("%B %d, %Y") }}</span>
     </div>
     <hr>

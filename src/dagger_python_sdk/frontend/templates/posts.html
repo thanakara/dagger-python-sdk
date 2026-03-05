@@ -9,13 +9,13 @@
 {% endblock %}
 
 {% block body %}
-<h2>• POSTS</h2>
+<h1>POSTS</h1>
 <hr>
 {% for post in posts %}
 <a href="{{ url_for('all_user_posts', user_id=post.user_id) }}">{{ post.author.username }}</a>
-<h3>
+<h2>
     <a href="{{ url_for('select_post', post_id=post.id) }}">{{ post.title }}</a>
-</h3>
+</h2>
 <p>{{ post.content }}</p>
 {% endfor %}
 {% endblock %}
