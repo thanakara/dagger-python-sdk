@@ -10,6 +10,7 @@ requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.135.1",
     "omegaconf>=2.3.0",
+    "sqlalchemy>=2.0.48",
 ]
 
 [project.scripts]
@@ -18,3 +19,31 @@ run-main = "dagger_python_sdk.__main__:main"
 [build-system]
 requires = ["uv_build>=0.8.14,<0.9.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.4",
+]
+
+[tool.ruff]
+line-length = 80
+target-version = "py312"
+exclude = [".git", ".vscode"]
+
+[tool.ruff.lint]
+select = [
+    "I", "B", "C", "E", "F", "W", "B9", "UP", "PL"
+    ]
+ignore = [
+    "W191", "E731", "B905", "PLR0913", "PLC0414"
+]
+
+[tool.ruff.lint.isort]
+from-first = false
+length-sort = true
+lines-between-types = 1
+known-first-party = ["src"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

@@ -3,3 +3,4 @@ src/data/
 
 /.venv
 /.env.local
+/.ruff_cache

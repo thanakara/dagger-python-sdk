@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ super() }}
+{% endblock %}
+
+{% block stylesheets %}
+{{ super() }}
+{% endblock %}
+
+{% block body %}
+{% if posts %}
+<h3>{{ user.username }}</h3>
+<h2>Post Titles:</h2>
+<hr>
+{% for post in posts %}
+<ul>
+    <li>{{ post.title }}</li>
+</ul>
+{% endfor %}
+{% else %}
+<h2>User has no posts yet.</h2>
+{% endif %}
+{% endblock %}

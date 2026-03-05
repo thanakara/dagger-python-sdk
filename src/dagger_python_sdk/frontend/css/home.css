@@ -65,8 +65,8 @@ h3 {
 }
 
 h3::before {
-    content: ";
- display: block;
+    content: "";
+    display: block;
     width: 2rem;
     height: 2px;
     background: var(--accent);

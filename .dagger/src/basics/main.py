@@ -1,8 +1,9 @@
-from pathlib import Path
 from typing import Annotated
+from pathlib import Path
 
 import dagger
-from dagger import DefaultPath, Doc, Ignore, check, dag, function, object_type
+
+from dagger import Doc, Ignore, DefaultPath, dag, check, function, object_type
 
 BACKEND_DIR = Path("src") / "dagger_python_sdk" / "backend"
 

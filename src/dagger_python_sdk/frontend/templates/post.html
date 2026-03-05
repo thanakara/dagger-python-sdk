@@ -36,8 +36,8 @@
 {% block body %}
 <div class="post-header">
     <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h4>{{ post.author }}</h4>
-        <span>{{ post.date_posted }}</span>
+        <h4>{{ post.author.username }}</h4>
+        <span>{{ post.date_posted.strftime("%B %d, %Y") }}</span>
     </div>
     <hr>
     <h3>{{ post.title }}</h3>
